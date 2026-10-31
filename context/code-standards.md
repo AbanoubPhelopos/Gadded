@@ -1,8 +1,14 @@
 # Code Standards
 
-Scope: notebook-first Python PoC. (Web/TS/DB conventions from the full-product spec are dropped for the hackathon.)
+Scope: notebook-first Python PoC plus the user-authorized React pitch frontend.
+Database/auth conventions remain out of scope.
 
 ## General
+
+- React demo: strict TypeScript, Tailwind compiled by Vite (no CDN runtime), accessible
+  labels/focus, responsive layouts, explicit null/unknown states and chart units.
+  Python Pydantic contracts remain canonical; no frontend financial/eligibility logic.
+  Provider keys stay on the server.
 
 - Keep modules small and responsibility-focused.
 - Prefer explicit domain names over generic utility names.
@@ -14,6 +20,13 @@ Scope: notebook-first Python PoC. (Web/TS/DB conventions from the full-product s
 
 ## Python
 
+- Backend ownership: `backend/src/gadded/`, with HTTP transport in `api/`,
+  orchestration in `application/`, calculations by domain, and external adapters in
+  `integrations/`. Keep `contracts.py` canonical. Resolve I/O paths through `core.config`.
+- Runtime requirements are declared once in `backend/requirements/runtime.txt` and
+  consumed by `backend/pyproject.toml`; optional development/notebook/legacy tools use extras.
+- Unit and integration tests live in `backend/tests/`; generated artifacts never go in source/data.
+
 - Python 3.12+.
 - Type hints on all functions.
 - Pydantic models at module boundaries (`contracts.py` is canonical).
@@ -24,7 +37,7 @@ Scope: notebook-first Python PoC. (Web/TS/DB conventions from the full-product s
 
 ## Notebook (`gadded.ipynb`)
 
-- The notebook orchestrates; it does not hold business logic. Import from `src/gadded/`.
+- The notebook orchestrates; it does not hold business logic. Import from `backend/src/gadded/`.
 - Cells run top-to-bottom on a clean kernel without manual edits.
 - Each stage prints/plots its typed output so the pipeline is auditable.
 - No secrets in the notebook — read the OpenAI key from `.env`.

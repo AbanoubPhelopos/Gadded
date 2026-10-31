@@ -1,672 +1,163 @@
-# ☀️ Gadded — AI-Powered Solar Decision Support
+# Gadded · Solar intelligence for Egyptian industry
 
-<p align="center">
-  <strong>Smarter Decisions. Greener Industry.</strong>
-</p>
+Gadded turns factory electricity consumption and rooftop information into a preliminary
+solar assessment: technical sizing, financial uncertainty, site screening, and a cited
+regulatory roadmap. The React application and showcase notebook share one Python engine.
 
-<p align="center">
-  AI-driven solar pre-development decision support for Egyptian factories.
-</p>
+Built for **AI Empower Egypt 2026 · Renewable Energy Using AI**. The graded artifacts
+remain the Python package, `gadded.ipynb`, and `docs/gadded.pdf`.
 
-<p align="center">
-  Built for <strong>AI Empower Egypt 2026 — Renewable Energy Using AI</strong>
-  <br>
-  Powered by <strong>Dell Technologies</strong>
-</p>
-
----
-
-## 🌍 Overview
-
-**Gadded** is an AI-powered solar decision-support platform designed to help
-Egyptian factories evaluate the technical, financial, regulatory, and
-operational feasibility of rooftop solar energy.
-
-Factory owners often face complex decisions before investing in solar energy:
-
-- How much solar capacity does the factory actually need?
-- How much electricity can the system generate?
-- How much of that energy can be consumed on-site?
-- What would the investment cost and expected financial return be?
-- What regulatory requirements and approvals are involved?
-- Which solar EPC companies have relevant industrial experience?
-
-Gadded brings these considerations together in a single, transparent,
-and evidence-based assessment workflow.
-
-Instead of relying on simplified assumptions or sales-driven recommendations,
-Gadded combines **machine learning, physics-based solar simulation,
-financial optimization, uncertainty analysis, geospatial checks,
-and AI-powered information retrieval** to support more informed
-early-stage investment decisions.
-
-> **Gadded transforms the early solar feasibility process from a
-> complex, fragmented task into a structured assessment that can
-> be completed within minutes.**
-
----
-
-## 🎯 The Problem
-
-Egyptian factories and small-to-medium enterprises face several barriers
-to rooftop solar adoption.
-
-### ⚡ 1. Limited Electricity Consumption Data
-
-Many facilities do not have smart-meter interval data.
-
-As a result, solar system sizing often relies on monthly electricity bills,
-which do not capture hourly demand patterns.
-
-This can lead to:
-
-- Oversized systems and inefficient capital allocation.
-- Undersized systems that fail to meet expected energy needs.
-- Limited visibility into solar self-consumption.
-
-### 💰 2. Financial Uncertainty
-
-Solar investment decisions require more than a basic payback calculation.
-
-Factory owners need to consider:
-
-- Electricity tariff changes.
-- System degradation.
-- Financing structures.
-- Long-term savings.
-- Investment risk and uncertainty.
-
-### 📋 3. Regulatory Complexity
-
-Understanding solar connection models, permitting requirements,
-grid constraints, and applicable regulations can be difficult.
-
-### 🏗️ 4. Vendor Discovery
-
-Finding reliable EPC providers with relevant commercial and industrial
-solar experience requires research and verification.
-
----
-
-## 💡 Our Solution
-
-Gadded provides an integrated workflow that helps answer three critical
-questions:
-
-| Question | Gadded's Approach |
-|----------|-------------------|
-| Is the project technically and spatially feasible? | GIS checks and solar generation modeling |
-| What system size provides economic value? | Load matching, financial optimization, and risk simulation |
-| What should happen next? | Cited regulatory roadmap and evidence-backed EPC leads |
-
-Gadded is designed to support **early-stage decision-making**.
-It does not replace detailed engineering studies, official approvals,
-or professional financial and regulatory advice.
-
----
-
-## 🚀 Key Features
-
-### 📊 1. Industrial Load Profile Estimation
-
-Gadded estimates hourly electricity demand when measured interval data
-is unavailable.
-
-The pipeline combines:
-
-- K-Means clustering for operational pattern discovery.
-- Random Forest classification for load archetype prediction.
-- Deterministic fallback rules for low-confidence predictions.
-- Monthly consumption-based profile scaling.
-
-The system generates a representative **8,760-hour annual load profile**
-for solar-to-load matching.
-
-> The proof of concept uses synthetic load profiles.
-> Model performance should not be interpreted as validation on measured
-> Egyptian factory electricity data.
-
----
-
-### ☀️ 2. Physics-Based Solar Generation Simulation
-
-Gadded uses **pvlib** to model photovoltaic system performance.
-
-The simulation considers relevant parameters such as:
-
-- Solar irradiance.
-- Ambient temperature.
-- Panel orientation.
-- Temperature coefficients.
-- Inverter efficiency.
-- System losses.
-- Degradation assumptions.
-
-The result is an hourly solar generation profile for candidate PV system sizes.
-
----
-
-### 📍 3. Geospatial Feasibility Assessment
-
-The GIS module evaluates location-related constraints using spatial datasets.
-
-It supports checks involving:
-
-- Facility location.
-- Industrial zones.
-- Environmental restrictions.
-- Protected-area boundaries.
-- Site suitability considerations.
-
-These checks help identify potential constraints before detailed engineering.
-
----
-
-### 💰 4. Financial Optimization
-
-Gadded evaluates candidate solar capacities to identify configurations
-that maximize projected financial value.
-
-The optimization considers:
-
-- Available roof area.
-- Grid connection capacity constraints.
-- User-defined budget.
-- Electricity bill savings.
-- Net-metering export assumptions.
-- Long-term project economics.
-
-The system evaluates financial outcomes over a **25-year operational lifecycle**.
-
----
-
-### 🎲 5. Monte Carlo Risk Simulation
-
-Financial projections are uncertain.
-
-Rather than presenting only one static payback estimate, Gadded uses
-a Monte Carlo simulation with **1,000 iterations**.
-
-The simulation explores uncertainty in variables such as:
-
-- Solar irradiance.
-- Electricity tariff adjustments.
-- Inflation.
-- Other defined financial assumptions.
-
-This produces a distribution of potential financial outcomes and
-payback periods.
-
----
-
-### 📚 6. Regulatory Copilot (RAG)
-
-Gadded integrates Retrieval-Augmented Generation (RAG) to support
-regulatory information retrieval.
-
-The regulatory copilot:
-
-1. Retrieves relevant regulatory documents.
-2. Identifies applicable requirements.
-3. Synthesizes a structured permitting roadmap.
-4. Provides citations to retrieved source material.
-
-The goal is to make complex regulatory information more accessible
-while keeping recommendations grounded in source evidence.
-
-> Regulatory information must be verified with the relevant Egyptian
-> authorities before implementation.
-
----
-
-### 🏢 7. Evidence-Grounded EPC Vendor Discovery
-
-Gadded includes an AI-powered vendor discovery workflow.
-
-The system searches for solar EPC providers operating in Egypt
-and extracts relevant information, including:
-
-- Company details.
-- Industrial and commercial solar experience.
-- Project evidence.
-- Contact channels.
-- Source references.
-
-The purpose is to help factory owners identify potential vendors
-for further evaluation.
-
-Vendor inclusion does not constitute certification, endorsement,
-or a guarantee of service quality.
-
----
-
-## 🧠 Technical Architecture
-
-Gadded follows a hybrid architecture combining deterministic
-engineering calculations, machine learning, optimization,
-and AI-powered information retrieval.
-
-```mermaid
-flowchart TD
-    A["🏭 Factory Inputs"] --> B["📍 GIS Feasibility Check"]
-    A --> C["📊 Load Profile Estimation"]
-
-    C --> D["🤖 ML Classification"]
-    D --> E["⏱️ 8,760-Hour Load Profile"]
-
-    B --> F["☀️ PV Generation Simulation"]
-    E --> F
-
-    F --> G["⚙️ Sizing Optimization"]
-    G --> H["🎲 Monte Carlo Risk Simulation"]
-
-    H --> I["💰 Financial Assessment"]
-
-    A --> J["📚 Regulatory RAG Copilot"]
-    A --> K["🏢 EPC Vendor Discovery"]
-
-    I --> L["📄 Gadded Assessment Report"]
-    J --> L
-    K --> L
-```
-
-### Core Technologies
-
-| Component | Technology |
-|-----------|------------|
-| Programming Language | Python 3.12+ |
-| Data Processing | Pandas, NumPy |
-| Machine Learning | Scikit-learn |
-| Solar Simulation | pvlib |
-| AI Reasoning | Gemini |
-| Vendor & Financing Search | Groq-powered workflow |
-| Regulatory Retrieval | RAG + Vector Database |
-| Geospatial Analysis | GeoPandas / Spatial Data |
-| User Interface | Streamlit |
-| Testing | Pytest |
-| Showcase | Jupyter Notebook |
-
----
-
-## 🔄 End-to-End Workflow
-
-```text
-1. Factory Information
-   │
-   ├── Location
-   ├── Industrial Sector
-   ├── Monthly Electricity Consumption
-   ├── Roof Area
-   └── Operating Schedule
-   │
-   ▼
-2. Spatial Feasibility
-   │
-   ▼
-3. Industrial Load Estimation
-   │
-   ▼
-4. Hourly Solar Generation Simulation
-   │
-   ▼
-5. PV Sizing & Load Matching
-   │
-   ▼
-6. Financial Optimization
-   │
-   ▼
-7. Monte Carlo Risk Simulation
-   │
-   ▼
-8. Regulatory Roadmap
-   │
-   ▼
-9. EPC Vendor Discovery
-   │
-   ▼
-📄 Preliminary Solar Feasibility Assessment
-```
-
----
-
-## 📈 Prototype Results
-
-The proof of concept was evaluated using synthetic industrial
-consumption datasets, physics-based solar simulations, and regulatory
-document test suites.
-
-| Metric | Result |
-|--------|--------|
-| Model Version | load-cluster-classifier-0.1.0 |
-| Number of Clusters (K) | 6 |
-| Training Facilities | 67 |
-| Testing Facilities | 23 |
-| Classifier Test Accuracy | 95.65% |
-| Baseline Test Accuracy | 91.30% |
-| Silhouette Score (Train) | 0.428 |
-| Adjusted Rand Index | 0.653 |
-| Monte Carlo Iterations | 1,000 |
-| Annual Assessment Runtime | Under 3 seconds* |
-
-\* Runtime reported in the project documentation for the tested
-prototype environment.
-
-### ⚠️ Model Limitations
-
-The load classification model was trained entirely on a synthetic
-parametric population rather than measured Egyptian factory
-interval data.
-
-Therefore, the reported classification accuracy validates the
-tested methodology but does not establish generalization to
-real-world Egyptian industrial load patterns.
-
----
-
-## 📁 Project Structure
-
-```text
-gadded/
-│
-├── src/
-│   └── gadded/
-│       ├── contracts/
-│       ├── weather/
-│       ├── pv/
-│       ├── load/
-│       ├── load_ml/
-│       ├── matching/
-│       ├── optimization/
-│       ├── finance/
-│       ├── risk/
-│       ├── gis/
-│       ├── regulatory/
-│       ├── vendors/
-│       ├── feasibility/
-│       └── report/
-│
-├── data/
-│   ├── golden_case.json
-│   ├── assumptions.json
-│   ├── cached_weather/
-│   ├── load_archetypes/
-│   ├── regulatory_excerpts/
-│   └── zones.geojson
-│
-├── tests/
-│   └── pytest suite
-│
-├── gadded.ipynb
-├── app.py
-├── requirements.txt
-├── requirements.lock.txt
-├── .env.example
-└── docs/
-    └── gadded.pdf
-```
-
----
-
-## ⚙️ Setup
-
-### Prerequisites
-
-- Python 3.12+
-- pip
-- Jupyter Notebook
-- API keys for the AI-powered stages
-
-Developed and tested on Python 3.14.
-
-### 1. Clone the Repository
-
-```powershell
-git clone <YOUR_REPOSITORY_URL>
-cd gadded
-```
-
-### 2. Create a Virtual Environment
-
-```powershell
-python -m venv .venv
-```
-
-Activate the environment:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-For macOS/Linux:
+## Run with Docker Desktop
 
 ```bash
-source .venv/bin/activate
+docker compose up -d --build --wait
 ```
 
-### 3. Install Dependencies
+Open **http://localhost:8080**. The committed golden-case assessment runs automatically.
+Use **Edit inputs** to configure a site, factory consumption, and financing scenario.
+Choose **English (UK)** or **Arabic (Egypt)** in the header; Arabic uses RTL layout.
+Source evidence and the downloadable HTML report retain their original English language.
 
-```powershell
-pip install -r requirements.txt
+**AI providers are optional and currently unconfigured.** Core calculations and cited
+rules work without keys. Add a root `.env` using `.env.example` later, then recreate
+the API container to enable optional live explanation and vendor/financing discovery.
+No provider calls occur in the default assessment.
+
+```bash
+docker compose ps
+docker compose logs --tail=100 api
+docker compose down
 ```
 
-For pinned dependencies:
+Set `GADDED_PORT` to change the default port 8080. The API is internal to the Compose
+network; Nginx serves the frontend and proxies `/api`.
 
-```powershell
-pip install -r requirements.lock.txt
-```
-
-### 4. Configure Environment Variables
-
-Copy `.env.example` to `.env`:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-Add your API keys:
-
-```env
-GEMINI_API_KEY=your_gemini_api_key
-GROQ_API_KEY=your_groq_api_key
-```
-
-API keys are required only for the regulatory, vendor,
-and financing stages.
-
-**Do not commit your `.env` file or expose API keys publicly.**
-
----
-
-## ▶️ Running Gadded
-
-### 📓 Run the Showcase Notebook
-
-The notebook is the main graded artifact and demonstrates
-the complete assessment pipeline using the golden case.
-
-```powershell
-jupyter notebook gadded.ipynb
-```
-
-### 🖥️ Launch the Streamlit Demo
-
-The Streamlit interface is an optional UI for the live demonstration.
-
-```powershell
-streamlit run app.py
-```
-
-### 🧪 Run Tests
-
-```powershell
-pytest
-```
-
-Tests cover formula validation, reconciliation,
-and evidence-related checks.
-
----
-
-## 🗂️ Data & Assumptions
-
-Gadded maintains source classifications for external values
-used throughout the assessment.
-
-Each external value includes a source and classification
-in `data/assumptions.json`.
-
-### Source Classifications
-
-| Classification | Description |
-|----------------|-------------|
-| OFFICIAL | Official source material |
-| MARKET_RANGE | Market-based estimate or range |
-| LITERATURE_PROXY | Value informed by published literature |
-| SYNTHETIC | Artificially generated data |
-| DEMO | Demonstration placeholder |
-
-> Values labeled `DEMO` are placeholders and must be replaced
-> with appropriately sourced figures before formal use.
-
----
-
-## 🌐 Data Sources
-
-The project integrates several data sources and datasets:
-
-| Source | Purpose |
-|--------|---------|
-| NASA POWER | Hourly meteorological data |
-| WDPA | Protected-area spatial data |
-| NREA | Egyptian renewable energy information |
-| EgyptERA | Regulatory information |
-| Ministry of Electricity | Energy and regulatory context |
-| IDA / EEAA | Industrial and environmental regulatory context |
-| Kaggle Steel Industry Dataset | Load modeling development reference |
-
-The specific sources and references are documented in the
-project documentation and data configuration.
-
----
-
-## 🔮 Future Roadmap
-
-Gadded is designed to evolve beyond preliminary solar assessments.
-
-### 🔋 1. Battery Energy Storage Systems (BESS)
-
-Extend the platform to evaluate battery storage
-and hybrid renewable energy configurations.
-
-### 📡 2. Smart Meter Integration
-
-Support direct processing of measured hourly electricity
-consumption data to improve load profile calibration.
-
-### 📊 3. Advanced Tariff Modeling
-
-Introduce more detailed tariff structures, time-of-use pricing,
-and updated connection fee assumptions.
-
-### 🏗️ 4. Enhanced EPC Matching
-
-Improve vendor matching using:
-
-- Historical project data.
-- Regional service coverage.
-- Industrial specialization.
-- Quote comparison capabilities.
-
-### 📄 5. Automated Document Verification
-
-Process uploaded engineering drawings, structural certificates,
-and land ownership documents to identify missing information
-and potential compliance requirements.
-
-### 🌍 6. Broader Renewable Energy Expansion
-
-Explore integration with energy management systems,
-financing partners, and expansion across industrial sectors
-and African markets.
-
----
-
-## 🌱 Impact
-
-Gadded aims to support multiple stakeholders in the renewable
-energy ecosystem.
-
-| Stakeholder | Potential Value |
-|-------------|-----------------|
-| 🏭 Factory Owners | Clearer feasibility insights and investment planning |
-| 🏛️ Government Authorities | Support for distributed renewable energy adoption |
-| 🏢 EPC Developers | Structured leads and standardized project information |
-| 💳 Financial Institutions | Assessment reports for financing evaluation |
-| 🌍 Environment | Support for industrial decarbonization |
-
-By improving access to transparent feasibility information,
-Gadded aims to reduce the barriers that prevent factories
-from exploring renewable energy investments.
-
----
-
-## 🏆 Hackathon
-
-**AI Empower Egypt 2026 — Renewable Energy Using AI**
-
-Gadded was developed as an AI-driven solution focused on
-industrial renewable energy adoption.
-
-The project combines:
-
-- Artificial intelligence.
-- Machine learning.
-- Solar energy simulation.
-- Financial analysis.
-- Regulatory intelligence.
-- Evidence-grounded vendor discovery.
-
----
-
-## ⚠️ Disclaimer
-
-Gadded provides a preliminary decision-support assessment.
-
-Its results must be verified through qualified professionals
-and the responsible authorities before any formal investment,
-engineering, regulatory, or financing decision.
-
-The platform does not replace:
-
-- Detailed engineering studies.
-- Structural assessments.
-- Official regulatory approvals.
-- Grid connection studies.
-- Qualified financial advice.
-- EPC due diligence.
-
----
-
-## 👥 Team
-
-**Hacktastic Team**
-
-Developed for the AI Empower Egypt 2026 Hackathon.
-
----
-
-## 📄 Documentation
-
-Additional project documentation is available in:
+## Repository map
 
 ```text
-docs/gadded.pdf
+Gadded/
+├── backend/
+│   ├── pyproject.toml           # Python package, optional extras, pytest configuration
+│   ├── requirements/runtime.txt # runtime dependency source for the package
+│   ├── Dockerfile               # runtime, test, and production stages
+│   ├── src/gadded/
+│   │   ├── main.py              # FastAPI application factory and server entry point
+│   │   ├── contracts.py         # canonical Pydantic domain models
+│   │   ├── api/                 # HTTP routes and request schemas
+│   │   ├── application/         # assessment use case, resources, feasibility
+│   │   ├── core/                # configuration and shared disclosures
+│   │   ├── energy/              # load ML, PV, hourly matching, sizing
+│   │   ├── economics/           # finance and Monte Carlo risk
+│   │   ├── siting/              # GIS screening
+│   │   ├── regulatory/          # retrieval, cited rules, optional explanation
+│   │   ├── discovery/           # evidence-gated vendors and financing
+│   │   ├── integrations/        # weather I/O and provider adapters
+│   │   └── reporting/           # result assembly and HTML rendering
+│   └── tests/
+│       ├── unit/                # formulas, rules, models, configuration
+│       └── integration/         # API, report, and offline notebook execution
+├── frontend/                    # React + TypeScript + Tailwind + Vite
+│   └── src/
+│       ├── pages/               # lazy-loaded analytical views
+│       ├── components/          # layout, shared UI, charts, assessment controls
+│       ├── state/               # assessment state and locale preference
+│       ├── lib/                 # HTTP, formatting, translations
+│       └── data/                # API-facing TypeScript shapes
+├── data/                        # versioned reference inputs and source metadata
+├── docs/                        # graded PDF and current architecture documentation
+├── context/                     # product decisions, contracts, standards, progress
+├── artifacts/                   # generated reports/models; ignored by Git
+├── legacy/streamlit/            # retired UI and historical dependency snapshots
+├── gadded.ipynb                 # graded end-to-end showcase
+├── compose.yaml                 # local application stack
+└── Makefile                     # common development commands
 ```
 
----
+See [backend responsibilities](backend/README.md), [architecture](docs/architecture.md),
+[data inventory](data/README.md), and [current progress](context/progress-tracker.md).
 
-<p align="center">
-  ☀️ <strong>Gadded — Decide Faster. Invest Smarter.</strong>
-  <br>
-  <em>Supporting a cleaner, smarter renewable energy future.</em>
-</p>
+## Local development
+
+Requires **Python 3.12+** and **Node 22.12+**. From the repository root:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e './backend[dev,notebook]'
+npm --prefix frontend ci
+```
+
+Run in separate terminals:
+
+```bash
+make api       # FastAPI on port 8000
+make frontend  # Vite; proxies /api to localhost:8000
+```
+
+`backend/requirements/runtime.txt` defines runtime dependencies. Optional extras in
+`backend/pyproject.toml` isolate `dev`, `notebook`, and `legacy` tools. Do not install
+historical dependency snapshots from `legacy/` for the active application.
+
+### Showcase notebook
+
+```bash
+make notebook
+```
+
+Launch from the repository root and run the cells top-to-bottom. Imports point to the
+organized backend package; report output goes to `artifacts/reports/`. Provider cells
+skip without keys. Reference data remains under `data/`.
+
+## Validation
+
+```bash
+make build        # strict TypeScript check and production frontend build
+make test         # backend unit + integration tests; provider tests skip without keys
+make test-render  # bilingual React rendering checks against running Compose
+```
+
+For isolated container tests, including the offline showcase notebook:
+
+```bash
+docker build -f backend/Dockerfile --target test -t gadded-tests .
+docker run --rm gadded-tests
+```
+
+Keep provider keys unset for offline checks. Notebook execution tests use a temporary
+workspace and never overwrite the committed notebook or its outputs. React render tests
+check markup and locale formatting; browser visual/interaction QA is a separate check.
+
+## Analytical boundaries
+
+| Stage | Method |
+| --- | --- |
+| Factory load | ML clustering/classification over explicitly synthetic archetypes |
+| Solar generation | pvlib physics with cached NASA POWER weather |
+| Capacity sizing | Constrained NPV optimization |
+| Finance and uncertainty | Deterministic formulas and seeded Monte Carlo ranges |
+| Site screening | Shapely against source-labelled local GIS layers |
+| Regulatory status | Versioned deterministic rules with citations |
+| Optional explanation/discovery | Gemini explanation/extraction and Groq web search |
+
+The LLM never decides feasibility. Missing authoritative coverage is `unknown`.
+Every displayed vendor requires source evidence. Reports render computed results;
+they do not recalculate them. Finance shows P10/P50/P90 outcomes rather than a single
+promised return.
+
+## Configuration and limits
+
+- `GADDED_DATA_DIR`: absolute reference-data directory. Defaults to the checkout's
+  `data/`, resolved independently of the working directory. Set it explicitly for a
+  wheel installation outside the checkout. Docker sets `/app/data`.
+- `GADDED_ARTIFACT_DIR`: generated-file destination (checkout default: `artifacts/`).
+- `.env`: optional provider keys; never committed or shipped in an image.
+- Cached weather is limited to the 10th of Ramadan demo area (within 0.1 degrees of
+  the golden site). No nationwide weather or authoritative GIS coverage is implied.
+- GIS includes a labelled synthetic protected-area scenario. Load-model training is
+  synthetic; regulatory excerpts include paraphrased research summaries.
+- Results are held in browser memory and reset on reload. No database, auth, or queue.
+- Reports are available as self-contained HTML and JSON; browser print can save PDF.
+
+This is preliminary decision support. Confirm structural safety, grid capacity,
+regulatory requirements, installer capabilities, and financing terms with qualified
+professionals and the responsible authorities before investing.

@@ -1,7 +1,34 @@
 # Architecture Context
 
-Gadded is a **notebook-first Python proof of concept**. No web app, database, queue, or auth in Phase 1.
-The analytical engine is the graded work; the notebook orchestrates it end to end on one golden case.
+Gadded retains its **notebook-first Python proof of concept** as the graded artifact.
+On 2026-10-30 the user explicitly requested replacing the Streamlit pitch UI with
+React + TypeScript + Tailwind. A thin FastAPI adapter reuses the existing Python
+engine; Nginx serves the Vite build and proxies `/api` in Docker Compose. No database,
+queue, or auth is added. The notebook remains supported.
+
+## Repository organization
+
+The user authorized the React migration and this backend organization on 2026-10-30.
+
+- `backend/` owns Python packaging, requirements, Dockerfile, source, and unit/integration tests.
+- `backend/src/gadded/` separates `api`, `application`, `core`, `energy`, `economics`,
+  `siting`, `regulatory`, `discovery`, `integrations`, and `reporting`.
+- `contracts.py` is canonical; `gadded.main:app` composes thin HTTP routers.
+- `application/assessment.py` orchestrates existing analytical modules.
+  `application/resources.py` loads cached datasets/models into named resources.
+- `frontend/` contains React/TypeScript, Vite, compiled Tailwind, Recharts, and Lucide.
+- Root `gadded.ipynb` and `data/` remain discoverable for the graded showcase.
+- `core/config.py` resolves data and generated-output paths independently of CWD.
+  `GADDED_DATA_DIR` and `GADDED_ARTIFACT_DIR` provide explicit deployment overrides.
+- `artifacts/` contains generated reports/models. `docs/` contains the graded PDF
+  and current architecture guide. `legacy/streamlit/` archives the old interface.
+- Root `compose.yaml` builds `backend/Dockerfile` and the frontend. `Makefile` exposes
+  common commands. No database, queue, auth, or new live provider calls are added.
+- API routes/JSON shapes, UI/locales, numerical behavior, and citation rules are preserved.
+- Results live in browser memory; edits mark existing results as a previous run.
+- Live AI remains opt-in and unconfigured until the user supplies `.env`.
+
+See `docs/architecture.md` for the dependency rules and import migration map.
 
 ## Stack
 
@@ -17,7 +44,7 @@ The analytical engine is the graded work; the notebook orchestrates it end to en
 | Risk | NumPy | Monte Carlo + sensitivity |
 | Geospatial | Shapely | Point-in-polygon, distance on local GeoJSON |
 | Retrieval | TF-IDF cosine (scikit-learn) | Regulatory RAG over ~10 local excerpt chunks (no vector DB, no embeddings API) |
-| LLM | Groq (OpenAI-compatible chat completions API) | `openai/gpt-oss-120b` for cited regulatory explanation + RFQ wording (reasoning model — pass `reasoning_effort="low"`); `groq/compound` for the vendor web-search agent (built-in server-side search, evidence returned in `message.executed_tools`) |
+| Optional LLM | Gemini + Groq | Gemini handles retrieval/explanation and JSON extraction; Groq Compound supplies evidence-grounded search. Unconfigured by default. |
 | Charts | matplotlib | Notebook + report visuals |
 | Report | Jinja2 HTML (optional PDF) | Combined assessment artifact |
 | Tests | pytest | Formula, reconciliation, evidence checks |
@@ -25,40 +52,42 @@ The analytical engine is the graded work; the notebook orchestrates it end to en
 ## Repository shape
 
 ```text
-gadded/
-├── gadded.ipynb            # graded showcase: input -> full assessment
-├── README.md               # exact install + run steps (reviewers run from source)
-├── requirements.txt
-├── docs/gadded.pdf         # graded documentation (one PDF)
-├── data/
-│   ├── golden_case.json            # the fixed demo assessment input
-│   ├── weather_10ramadan_cached.csv  # NASA POWER fetched once, then offline
-│   ├── load_archetypes/            # normalized profiles + manifest
-│   ├── regulations/                # 2–3 short official excerpts + manifest
-│   ├── zones.geojson               # 2 industrial-zone polys + 1 protected area
-│   └── assumptions.json            # versioned, classified assumptions
-├── src/gadded/
-│   ├── contracts.py        # Pydantic models (data-contracts.md)
-│   ├── weather.py          # NASA POWER adapter + cache
-│   ├── pv.py               # pvlib generation
-│   ├── load.py             # archetype baseline + ML clustering/classifier
-│   ├── matching.py         # hourly self-consumption / import / export
-│   ├── optimization.py     # constrained sizing
-│   ├── finance.py          # cash + finance scenarios
-│   ├── risk.py             # Monte Carlo + sensitivity
-│   ├── gis.py              # shapely site screening
-│   ├── regulatory.py       # RAG retrieval + cited LLM + deterministic rules
-│   ├── vendors.py          # LLM web-search agent (evidence-gated)
-│   ├── feasibility.py      # deterministic status resolver
-│   └── report.py           # assemble AssessmentResult + HTML
-└── tests/
-    └── test_*.py
+backend/
+  pyproject.toml
+  requirements/runtime.txt
+  Dockerfile
+  src/gadded/
+    main.py
+    contracts.py
+    api/routes/
+    application/
+    core/
+    energy/
+    economics/
+    siting/
+    regulatory/
+    discovery/
+    integrations/
+    reporting/
+  tests/unit/
+  tests/integration/
+frontend/
+data/
+docs/
+context/
+artifacts/
+legacy/streamlit/
+gadded.ipynb
+compose.yaml
+Makefile
 ```
 
 ## Module boundaries
 
-- Pure calculation modules (`pv`, `load` baseline, `matching`, `optimization`, `finance`, `risk`, `feasibility`) make **no network or file calls** — inputs in, typed outputs out. Testable in isolation.
-- I/O lives at the edges: `weather` (cached fetch), `regulatory`/`vendors` (OpenAI), `report` (render).
+- Pure calculation functions in PV, matching, sizing, economics, and feasibility accept
+  explicit inputs and make no network/file calls. Load archetype reads and model
+  save/load functions are explicit I/O boundaries within the load modules.
+- I/O lives at the edges: `integrations`, `application.resources`, `regulatory`, `discovery`, and `reporting`.
 - `contracts.py` is the single source of shapes. No module invents a competing shape for assessment input, hourly series, GIS finding, regulatory finding, financial scenario, vendor evidence, or final result.
 - Do not mix regulatory reasoning, engineering calculation, and LLM prompting in one module.
 
@@ -85,7 +114,7 @@ golden_case.json
 - pgvector → TF-IDF cosine (scikit-learn) over a local excerpt corpus (only ~10 chunks).
 - PostGIS → Shapely on local GeoJSON.
 - Supabase / Next.js / Celery / Redis / auth → removed.
-- OpenAI Responses API → Groq's OpenAI-compatible endpoint (`openai/gpt-oss-120b` for reasoning/explanation, `groq/compound` for web-search).
+- OpenAI Responses API → hybrid Gemini explanation/extraction and Groq Compound search.
 - Live NASA POWER call → one cached CSV committed to the repo.
 - Model weights / large datasets → not committed; described in the doc (submission size limits).
 
@@ -95,8 +124,8 @@ golden_case.json
 - **PV (physics):** `pvlib`. Not machine learning. Preserve weather source, tilt, azimuth, loss, model version.
 - **Optimization:** constrained; objective and constraints inspectable; recommendation reproducible from frozen inputs; must not simply pick the largest size.
 - **Finance / risk:** deterministic formulas, tested; Monte Carlo seeded; show P10/P50/P90 and sensitivity.
-- **Regulatory:** retrieve (TF-IDF) → apply deterministic versioned rules → LLM (`openai/gpt-oss-120b`) explains only retrieved evidence + applied rules. The LLM never invents a permit, threshold, authority, duration, or eligibility decision.
-- **Vendors:** `groq/compound` web-search agent, strict structured output (extracted by a second `openai/gpt-oss-120b` pass constrained to the returned search evidence only), ≥1 accessible source per candidate, contact fields null when unsupported, no quality ranking.
+- **Regulatory:** retrieve (TF-IDF) → apply deterministic versioned rules → LLM (`gemini-flash-latest`) explains only retrieved evidence + applied rules. The LLM never invents a permit, threshold, authority, duration, or eligibility decision.
+- **Vendors:** `groq/compound` web-search agent, strict structured output (extracted by a second `gemini-flash-latest` pass constrained to the returned search evidence only), ≥1 accessible source per candidate, contact fields null when unsupported, no quality ranking.
 
 ## Invariants
 

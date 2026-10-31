@@ -2,6 +2,11 @@
 
 ## Goal
 
+2026-10-30: replace the Streamlit pitch UI at the user's request. Acceptance: editable
+intake/presets, real Python analysis, six result views, evidence and assumptions,
+downloads, responsive browser QA, production build, offline regression tests, and a
+running healthy Docker Compose stack.
+
 Deliver a hackathon proof of concept for AI Empower Egypt 2026 (Renewable Energy Using AI):
 a Python analytical engine + `gadded.ipynb` that takes one industrial rooftop-solar assessment
 from input to a combined technical, financial, regulatory, GIS, and vendor-ready result.

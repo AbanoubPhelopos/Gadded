@@ -1,5 +1,66 @@
 # Progress Tracker
 
+## 2026-10-31 — Repository publication
+
+- User authorized several logical commits and a push to the new repository.
+- Confirmed `origin` points to `git@github.com:AbanoubPhelopos/Gadded.git` and has
+  no remote branches. Preserve existing history and publish `main` without force.
+- Commit groups: backend organization, React frontend/locales, Docker/development
+  tooling, and documentation/context synchronization. Provider keys remain excluded.
+
+## 2026-10-30 — Repository and backend organization
+
+- User requested professional organization of the backend and whole repository.
+- Plan recorded before moving files: dedicated backend project, focused Python
+  packages, separate API/application layers, central data-path configuration,
+  archived Streamlit, and updated notebook/Docker/tests/docs.
+- Preserve current UI/locales and numerical/evidence behavior. Live providers remain
+  unconfigured and no live calls are authorized for this refactor.
+- Completed: `backend/` owns package metadata, runtime dependencies, Dockerfile,
+  focused source packages, and `tests/unit` + `tests/integration`. The HTTP app now
+  starts at `gadded.main:app`; all callers use the organized domain imports.
+- Added application resource loading with named typed fields and central settings
+  for data/artifact paths. Generated model/report files are separated from reference data.
+- Root notebook and datasets preserved; source-cell imports migrated without changing
+  committed notebook outputs. Legacy Streamlit and its screenshots/dependency snapshots
+  are archived under `legacy/streamlit/`. Generated example reports are preserved locally
+  under ignored `artifacts/reports/`.
+- Added root Makefile, backend/data/artifact guides, concise README, architecture and
+  import-migration guide. Updated active project context and AGENTS.md for current paths.
+- Verification: wheel built/installed in the production image; Docker Compose API and
+  frontend healthy at localhost:8080. **119 backend tests passed, 4 provider tests skipped**,
+  including full offline execution of `gadded.ipynb` in a temporary writable workspace.
+  **26 React rendering/locale checks passed** against the reorganized running API.
+  Python compilation and Git whitespace checks passed. No live provider calls made.
+
+## 2026-10-30 — React frontend migration
+
+- User explicitly authorized replacing Streamlit with React/TypeScript/Tailwind and
+  running/testing Docker Compose. Context updated before implementation.
+- Plan: thin FastAPI adapter over existing modules, polished responsive assessment UI,
+  production Nginx frontend, offline regression/API tests and browser QA.
+- Implemented the API/pipeline adapter and React UI. Following the user's Wasla
+  structure reference: `pages/`, `components/layout/`, `components/ui/`, `lib/`,
+  `data/types.ts`, `state/store.tsx`; routed lazy pages and error boundary.
+- User additionally requested en-UK/ar-EG locales (implemented as standards-compliant
+  `en-GB` and `ar-EG`), RTL, a distinct solar visual identity, restrained animations,
+  and improved usability. Interface translation and locale preference added; source
+  evidence and the HTML report retain their original English language.
+- Added offline API integration tests for chart reconciliation, citation preservation,
+  scope validation, scenario statuses, and HTML escaping. Validation is in progress.
+- User requested skipping AI providers until supplying `.env` later. No credentials
+  configured and no live provider tests/calls executed. Core assessments default offline;
+  live-AI selection is disabled while no providers are configured.
+- Verification: production TypeScript/Vite build passes; Python Docker suite:
+  **117 passed, 4 skipped** (provider tests skipped without keys). React server-render
+  checks: **26 passed** across all routes, intake, sources, number formatting, and both
+  locales, using real results from the running Docker API.
+- Docker API and frontend started healthy on `http://localhost:8080`; public health
+  endpoint responds 200. Final image refresh includes all UI refinements.
+- Browser visual/interaction QA could not run: CUA reported no available browsers,
+  and creating an in-app browser returned `Browser is not available: iab`.
+  React render checks verify markup, not responsive geometry or pointer interactions.
+
 Update whenever the phase, active module, scope, or implementation state changes.
 
 ## Context

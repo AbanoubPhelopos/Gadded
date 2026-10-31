@@ -1,10 +1,13 @@
 # UI Context
 
-> **DEFERRED for the hackathon PoC.** There is no web app in Phase 1. This file is the
-> full-product UI spec, kept as reference. What still applies now: the notebook and HTML
-> report should follow the chart rules (labels, units, text summary under each chart),
-> the status system (icon + text, never color alone), and the persistent preliminary-assessment
-> disclaimer. Ignore the navigation, screens, auth, and theming sections until the web build.
+2026-10-30: React pitch UI authorized by user. Activate the assessment/results and
+evidence surfaces; exclude auth, persistence, and unsupported nationwide weather.
+English first, using logical CSS properties for future RTL.
+
+> The full-product spec below remains a reference. The user-authorized React pitch
+> UI implements navigation, editable intake, analytical results, and sources, with
+> English (UK) and Arabic (Egypt). Auth and persistent project management remain
+> deferred. Notebook/report chart, status, evidence, and disclaimer rules still apply.
 
 ## Product Character
 

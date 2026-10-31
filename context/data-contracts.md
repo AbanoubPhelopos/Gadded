@@ -2,7 +2,18 @@
 
 ## Purpose
 
-This file defines the minimum shared shapes required for an end-to-end assessment. For the notebook-first PoC the **canonical implementation is Pydantic** in `src/gadded/contracts.py`; every module produces and consumes these shapes. The TypeScript interfaces below are kept as a readable specification of each shape — translate them to Pydantic models, no TS build is required.
+React API: `POST /api/assessments` accepts `{assessment: AssessmentInput, runLlm: boolean}`
+and returns `{result: AssessmentResult, input, generatedAt, monthlyEnergy, dailyEnergy,
+candidates, loadModel, assumptions, regulatoryExplanation, vendorWarnings,
+financingOptions, financingWarnings, reportHtml}`. Chart data aggregates the optimized
+hourly match. Runs are not persisted. GET `/api/defaults`, `/api/metadata`, `/api/health`
+provide golden input, AI/coverage metadata, and readiness. Invalid input/unsupported
+weather coverage returns 422; unexpected failures return a non-sensitive 500.
+
+This file defines the minimum shared shapes required for an end-to-end assessment.
+The **canonical implementation is Pydantic** in `backend/src/gadded/contracts.py`; every
+analytical module produces and consumes these shapes. The React frontend mirrors
+the API-facing shapes in `frontend/src/data/types.ts` and runs a strict TypeScript build.
 
 ## Assessment Input
 

@@ -6,8 +6,12 @@
 
 ## Hackathon framing
 
+2026-10-30 user-directed change: React + TypeScript + Tailwind replaces Streamlit
+as the primary pitch UI, using FastAPI and local Docker Compose. The Python package,
+notebook, and documentation PDF remain the graded PoC deliverables.
+
 Built for AI Empower Egypt 2026 (Renewable Energy Using AI). The Phase 1 deliverable is a
-**notebook-first Python proof of concept** (`gadded.ipynb` + `src/gadded/`) plus one documentation
+**notebook-first Python proof of concept** (`gadded.ipynb` + `backend/src/gadded/`) plus one documentation
 PDF — not a shipped web platform. The sections below describe the full product vision; the PoC
 implements one end-to-end vertical slice of it on a single golden case (10th of Ramadan food-processing
 factory). See `architecture-context.md` and `implementation-plan.md` for the actual build scope.

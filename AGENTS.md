@@ -5,9 +5,11 @@ The graded artifact is a **Python package + one showcase notebook**, not a web p
 
 ## Deliverable shape
 
-- Core PoC: clean, owned Python modules in `src/gadded/` driven end-to-end by `gadded.ipynb`.
+- Core PoC: clean, owned Python modules in `backend/src/gadded/` driven end-to-end by `gadded.ipynb`.
 - Documentation: one concise PDF in `docs/`.
-- No web app, no database, no queue, no auth for Phase 1. (Optional thin Streamlit wrapper only for the live pitch, time permitting.)
+- User-authorized pitch UI: React/TypeScript/Tailwind in `frontend/`, with a thin FastAPI
+  adapter in `backend/`. No database, queue, or auth. Retired Streamlit lives in `legacy/`.
+- Run from root with `make up`; verify with `make build`, `make test`, and `make test-render`.
 
 ## Read before implementing or making any architectural decision
 
