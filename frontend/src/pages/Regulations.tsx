@@ -1,0 +1,13 @@
+import { t } from '../state/locale'
+import { useStore } from '../state/store'
+import { Badge, Note, Panel, SourceLink } from '../components/ui'
+import { human, number } from '../lib/format'
+
+export default function Regulations() {
+  const {data} = useStore(); if (!data) return null
+  return <div className="space-y-5"><p className="original-evidence">{t('Original-language evidence (English).')}</p><div className="regulation-intro"><div><p className="eyebrow">{t("EVIDENCE BEFORE EXPLANATION")}</p><h2>{t("Your path from potential to permission.")}</h2><p>{t("Versioned rules decide the status. Citations let you inspect the basis.")}</p></div><Badge status={data.result.status}/></div>
+    <Note warning>{t("Legal excerpts are paraphrased research summaries, not verbatim primary circulars. Confirm current requirements with the named authorities. An assessment is not a permit.")}</Note>
+    {data.regulatoryExplanation && <Panel title={t("AI-assisted explanation")} eyebrow={t("GROUNDED IN RETRIEVED EVIDENCE")}><p className="whitespace-pre-wrap">{data.regulatoryExplanation}</p></Panel>}
+    <Panel title={t("Regulatory findings & next steps")} eyebrow={t('{count} FINDINGS · DETERMINISTIC RULE ENGINE',{count:number(data.result.regulatoryFindings.length)})}><div className="roadmap">{data.result.regulatoryFindings.map((f,i) => <article key={f.code} className="roadmap-item"><span className="roadmap-number">{String(i+1).padStart(2,'0')}</span><div className="roadmap-content"><div className="finding-heading"><h3>{f.title}</h3><Badge status={f.severity}>{human(f.conclusion)}</Badge></div><p>{f.explanation}</p><div className="finding-meta"><span>{f.confidence} {t(" confidence")}</span><span>{f.verificationRequired ? t("Verification required") : t("Evidence recorded")}</span><span>{f.ruleIds.join(', ')}</span></div>{f.estimatedDurationDays && <p className="duration">{f.estimatedDurationDays.minimum}{t("–")}{f.estimatedDurationDays.maximum} {t(" days · ")}{human(f.estimatedDurationDays.basis)} {t(" basis")}</p>}{f.requiredDocuments.length > 0 && <div className="document-checklist"><strong>{t("Documents to prepare")}</strong>{f.requiredDocuments.map(doc => <span key={doc}>{t("□ ")}{doc}</span>)}</div>}<details className="disclosure"><summary>{number(f.citations.length)} {t(f.citations.length === 1 ? 'source citation' : 'source citations')}</summary><div className="citations">{f.citations.map((c,i) => <div key={i}><SourceLink url={c.sourceUrl}>{c.documentTitle}</SourceLink><small>{c.authority} {t(" · ")}{c.effectiveDate || t("Date not recorded")} {c.section && `· ${c.section}`}</small><blockquote>{c.excerpt}</blockquote></div>)}</div></details></div></article>)}</div></Panel>
+  </div>
+}
