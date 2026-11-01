@@ -7,7 +7,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test:render": "vite build --ssr scripts/render-check.tsx --outDir .render-check && node .render-check/render-check.js"
+    "test:render": "vite build --ssr scripts/render-check.tsx --outDir .render-check && node --env-file=.env .render-check/render-check.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.0",

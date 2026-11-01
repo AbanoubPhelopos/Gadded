@@ -2,28 +2,28 @@
 import assert from 'node:assert/strict'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { MemoryRouter } from 'react-router-dom'
-import { LocaleProvider } from '../src/state/locale'
-import { AssessmentContext } from '../src/state/store'
-import { number } from '../src/lib/format'
-import type { AssessmentInput, AssessmentResponse, Metadata } from '../src/data/types'
-import { AppShell } from '../src/components/layout/AppShell'
 import Intake from '../src/components/assessment/Intake'
 import Sources from '../src/components/assessment/Sources'
-import Overview from '../src/pages/Overview'
-import Technical from '../src/pages/Technical'
-import Financial from '../src/pages/Financial'
-import Site from '../src/pages/Site'
-import Regulations from '../src/pages/Regulations'
-import Vendors from '../src/pages/Vendors'
-import Report from '../src/pages/Report'
+import { AppShell } from '../src/components/layout/AppShell'
+import type { AssessmentInput, AssessmentResponse, Metadata } from '../src/data/types'
+import { number } from '../src/lib/format'
 import About from '../src/pages/About'
+import Financial from '../src/pages/Financial'
+import Overview from '../src/pages/Overview'
+import Regulations from '../src/pages/Regulations'
+import Report from '../src/pages/Report'
+import Site from '../src/pages/Site'
+import Technical from '../src/pages/Technical'
+import Vendors from '../src/pages/Vendors'
+import { LocaleProvider } from '../src/state/locale'
+import { AssessmentContext } from '../src/state/store'
 
 const base = process.env.GADDED_TEST_URL || 'http://localhost:8080'
-const input = await fetch(`${base}/api/defaults`).then(r => r.json()) as AssessmentInput
-const metadata = await fetch(`${base}/api/metadata`).then(r => r.json()) as Metadata
+const input = await fetch(`${base}/api/defaults`).then<AssessmentInput>(r => r.json())
+const metadata = await fetch(`${base}/api/metadata`).then<Metadata>(r => r.json())
 const response = await fetch(`${base}/api/assessments`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({assessment:input,runLlm:false})})
 assert.equal(response.status,200)
-const data = await response.json() as AssessmentResponse
+const data: AssessmentResponse = await response.json()
 const noop = () => {}
 const state = {input,golden:input,data,metadata,loading:false,error:null,intakeOpen:false,sourcesOpen:false,
   setInput:noop,setIntakeOpen:noop,setSourcesOpen:noop,run:async()=>{},initialize:async()=>{},dirty:false}

@@ -1,19 +1,23 @@
 """Report: end-to-end assembly from real modules + HTML rendering checks."""
 
-from gadded.core.config import get_settings
-
 import pytest
 
-from gadded.contracts import ResultVersions, load_assessment_input, load_assumptions
 from gadded.application.feasibility import resolve_feasibility
+from gadded.contracts import ResultVersions, load_assessment_input, load_assumptions
+from gadded.core.config import get_settings
 from gadded.economics.finance import build_scenarios
-from gadded.siting.gis import load_zones, screen_site
+from gadded.economics.risk import RiskInputs, run_monte_carlo
 from gadded.energy.load import estimate_load_baseline
 from gadded.energy.optimization import optimize_capacity
-from gadded.regulatory.engine import build_context, evaluate_rules, load_excerpts, load_rules
-from gadded.reporting.report import DISCLAIMER, assemble_result, render_html
-from gadded.economics.risk import RiskInputs, run_monte_carlo
 from gadded.integrations.weather import load_cached_weather
+from gadded.regulatory.engine import (
+    build_context,
+    evaluate_rules,
+    load_excerpts,
+    load_rules,
+)
+from gadded.reporting.report import DISCLAIMER, assemble_result, render_html
+from gadded.siting.gis import load_zones, screen_site
 
 DATA_DIR = get_settings().data_dir
 CACHE = DATA_DIR / "weather_10ramadan_cached.csv"
@@ -42,8 +46,11 @@ def _build_golden_result():
         opex_egp=cap * a.number("opex_per_kw_year_egp"),
     )
     risk = run_monte_carlo(
-        risk_inputs, a, target_payback_years=ai.finance.targetPaybackYears,
-        seed=int(a.number("monte_carlo_seed")), runs=500,
+        risk_inputs,
+        a,
+        target_payback_years=ai.finance.targetPaybackYears,
+        seed=int(a.number("monte_carlo_seed")),
+        runs=500,
     )
 
     zones = load_zones(DATA_DIR / "zones.geojson")
@@ -51,17 +58,22 @@ def _build_golden_result():
 
     corpus = load_excerpts(DATA_DIR / "regulations" / "excerpts.json")
     rules = load_rules(DATA_DIR / "regulations" / "rules.json")
-    ctx = build_context(ai.connectionModel, ai.site.ownershipStatus, {f.code for f in gis_findings}, cap)
+    ctx = build_context(
+        ai.connectionModel, ai.site.ownershipStatus, {f.code for f in gis_findings}, cap
+    )
     reg_findings = evaluate_rules(ctx, rules, corpus)
 
     # Feed only run-specific anomalies into the status decision, not the standing
     # "synthetic baseline" disclosure that every baseline run carries (that stays
     # visible in result.warnings for transparency; see feasibility.py docstring).
     material_warnings = [
-        w for w in load_profile.result.warnings
+        w
+        for w in load_profile.result.warnings
         if "exceeds tolerance" in w or "empty archetype shape" in w
     ]
-    feas = resolve_feasibility(reg_findings, gis_findings, ai.site.ownershipStatus, material_warnings)
+    feas = resolve_feasibility(
+        reg_findings, gis_findings, ai.site.ownershipStatus, material_warnings
+    )
 
     versions = ResultVersions(
         code="gadded-poc-0.1.0",
