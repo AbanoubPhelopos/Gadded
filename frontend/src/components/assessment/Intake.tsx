@@ -1,9 +1,9 @@
-import { t, activeLocale } from '../../state/locale'
-import { useState, type FormEvent } from 'react'
 import { ArrowLeft, ArrowRight, Check, FlaskConical, Play, Sparkles } from 'lucide-react'
-import { Modal, Note } from '../ui'
-import { number } from '../../lib/format'
+import { useState, type SubmitEvent } from 'react'
 import type { AssessmentInput, Metadata } from '../../data/types'
+import { number } from '../../lib/format'
+import { activeLocale, t } from '../../state/locale'
+import { Modal, Note } from '../ui'
 
 export const presets = [
   {id: 'golden', name: 'Golden case', detail: '3,000 m² · food processing'},
@@ -26,7 +26,7 @@ export default function Intake({input, golden, onChange, onRun, onClose, metadat
   const [preset, setPreset] = useState('golden')
   const update = <K extends keyof AssessmentInput>(key: K, value: AssessmentInput[K]) => onChange({...input, [key]: value})
   const setLocation = (key: keyof AssessmentInput['location'], value: number | string) => update('location', {...input.location, [key]: value})
-  const submit = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); if (step < 2) setStep(step+1); else onRun(ai) }
+  const submit = (e: SubmitEvent<HTMLFormElement>) => { e.preventDefault(); if (step < 2) setStep(step+1); else onRun(ai) }
   return <Modal title={t("Configure your assessment")} onClose={onClose} wide>
     <div className="stepper">{[t("Project & site"), t("Energy profile"), t("Finance & review")].map((title, i) => <button key={title} className={i === step ? 'current' : ''} onClick={() => setStep(i)}><span>{i < step ? <Check size={13}/> : `0${i+1}`}</span>{t(title)}</button>)}</div>
     <form onSubmit={submit}>
